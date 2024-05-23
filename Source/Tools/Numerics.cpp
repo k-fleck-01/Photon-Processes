@@ -1,5 +1,7 @@
 #include "Numerics.hh"
 #include <iostream>
+#include <cmath>
+#include <algorithm>
 
 int Numerics::vectorIndex(const Vector<double>& vector, double value)
 {
@@ -24,6 +26,16 @@ int Numerics::vectorIndex(const Vector<double>& vector, double value)
         }
     }
     return index;
+}
+
+Vector<double> Numerics::log_transform(const Vector<double>& vector)
+{
+    Vector<double> transformed(vector.size());
+    std::transform(vector.begin(), vector.end(),
+                   transformed.begin(),
+                   [](double x) { return std::log(x); });
+
+    return transformed;
 }
 
 double Numerics::simpsons(const Vector<double>& variable,
@@ -51,7 +63,7 @@ double Numerics::simpsons(const Vector<double>& variable,
     }
 }
 
-double Numerics::interpolate1D(const Vector<double>& sampleX,
+double Numerics::interpolate1D_lin(const Vector<double>& sampleX,
     const Vector<double>& sampleY, double queryX)
 {
     if (sampleX.size() == 1)
@@ -87,6 +99,31 @@ double Numerics::interpolate1D(const Vector<double>& sampleX,
         double y1 = sampleY[closestIndex[0]];
         double y2 = sampleY[closestIndex[1]];
         return 1.0 / (x2 - x1) * (y1 * (x2 - queryX) + y2 * (queryX - x1));
+    }
+}
+
+double Numerics::interpolate1D_log(const Vector<double>& sampleX,
+    const Vector<double>& sampleY, double queryX)
+{
+    Vector<double> transformX = Numerics::log_transform(sampleX);
+    Vector<double> transformY = Numerics::log_transform(sampleY);
+    double transformQueryX = std::log(queryX);
+
+    double logValue = Numerics::interpolate1D_lin(transformX, transformY,
+                                                  transformQueryX);
+
+    return std::exp(logValue);
+}
+
+double Numerics::interpolate1D(const Vector<double>& sampleX,
+    const Vector<double>& sampleY, double queryX,
+    Numerics::InterpType itype /* = InterpType::Linear */)
+{
+    if (itype == Numerics::InterpType::Log) { // Use logarithmic if specified
+        return Numerics::interpolate1D_log(sampleX, sampleY, queryX);
+    }
+    else { // Otherwise, use linear
+        return Numerics::interpolate1D_lin(sampleX, sampleY, queryX);
     }
 }
 

@@ -9,3 +9,8 @@ Tests/*
 todo.txt
 Makefile
 install_manifest.txt
+
+### Additional 
+*/__pycache__
+TableGeneration/*.h5
+TableGeneration/test.py
