@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cassert>
 #include <iomanip>
+#include <cmath>
+#include <algorithm>
 
 #include "H5Cpp.h"
 
@@ -197,6 +199,16 @@ class Vector
         void print() const
         {
             std::cout << *this;
+        }
+
+        Vector<T> log_transform() const
+        {
+            Vector<T> transformed(m_size);
+            std::transform(m_data, &m_data[m_size],
+                           transformed.begin(),
+                           [](T x) { return std::log(x); });
+        
+            return transformed;
         }
 
     public:
