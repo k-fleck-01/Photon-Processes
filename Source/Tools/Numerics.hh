@@ -13,6 +13,7 @@ namespace Numerics
     double simpsons(const Vector<double>& variable,
         const Vector<double>& integrand);
 
+
     /* Enumeration for selecting interpolation type */
     enum struct InterpType { Linear, Log };
     

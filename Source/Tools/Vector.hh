@@ -201,6 +201,8 @@ class Vector
             std::cout << *this;
         }
 
+        /* Applies natural logarithm to each element and 
+         * returns as a new Vector */
         Vector<T> log_transform() const
         {
             Vector<T> transformed(m_size);
