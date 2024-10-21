@@ -26,7 +26,7 @@ public:
     virtual const Vector<double>& getEnergyDensity() const {
         return m_energyDensity;}
 
-    virtual const Vector<double>& getEnergydensity(int blockID) const {
+    virtual const Vector<double>& getEnergyDensity(int blockID) const {
         return getEnergyDensity();
     }
   
